@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:islami/tabs/ahadeth/ahadeth.dart';
+import 'package:islami/tabs/quran/quran_tab.dart';
+import 'package:islami/tabs/radio/radio_tab.dart';
+import 'package:islami/tabs/sebha/sebha_tab.dart';
 import 'package:islami/utilits/app_assets.dart';
 import 'package:islami/utilits/app_colors.dart';
 import '../../utilits/app_theme.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  HomeScreen({super.key});
   static const String route ="Home";
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int currentTabIndex = 0 ;
+  Widget currentTab = QuranTab();
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +28,48 @@ class HomeScreen extends StatelessWidget {
       ),
         child: Scaffold(
           backgroundColor: AppColors.transparent,
-          appBar: AppBar(
-            title: Text("Islami", style: AppTheme.appBarTextStyle,),
-            centerTitle: true,
-            elevation: 0,
-            backgroundColor: AppColors.transparent,
-          ),
+          appBar: buildAppBar(),
+          bottomNavigationBar: buildBottomNavigation(),
+          body: currentTab ,
         )
     );
   }
+
+  AppBar buildAppBar() =>AppBar(
+        title: Text("Islami", style: AppTheme.appBarTextStyle,),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: AppColors.transparent,
+      );
+
+  Widget buildBottomNavigation() => Theme(
+    data: ThemeData(canvasColor: AppColors.primary),
+    child: BottomNavigationBar(
+      items: [
+        buildBottomNavigationBarItem(AppAssets.icQuran , "Quran"),
+        buildBottomNavigationBarItem(AppAssets.icAhadeth , "Ahadeth"),
+        buildBottomNavigationBarItem(AppAssets.icSebha , "Sebha"),
+        buildBottomNavigationBarItem(AppAssets.icRadio , "Radio"),
+      ],
+      selectedItemColor: AppColors.lightBlack,
+      showSelectedLabels: true,
+      showUnselectedLabels: true,
+      unselectedItemColor: Colors.white,
+      currentIndex: currentTabIndex ,
+      onTap: (index){
+        currentTabIndex = index;
+        if(currentTabIndex == 0){
+          currentTab = QuranTab();
+        }else if(currentTabIndex == 1) {
+          currentTab = AhadethTab();
+        }else if(currentTabIndex == 2){
+          currentTab = SebhaTab();
+        }else {currentTab=RadioTab();}
+        setState(() {});
+      },
+    ),
+  );
+
+  BottomNavigationBarItem buildBottomNavigationBarItem( String imagePath , String label) =>
+     BottomNavigationBarItem(icon: ImageIcon(AssetImage(imagePath), size: 32,) , label: label );
 }
