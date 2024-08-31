@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentTabIndex = 0 ;
-  Widget currentTab = QuranTab();
+  Widget body = QuranTab();
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: AppColors.transparent,
           appBar: buildAppBar(),
           bottomNavigationBar: buildBottomNavigation(),
-          body: currentTab ,
+          body: body ,
         )
     );
   }
 
   AppBar buildAppBar() =>AppBar(
-        title: Text("Islami", style: AppTheme.appBarTextStyle,),
+        title: Text("Islami", style: AppTheme.mediaTitleTextStyle,),
         centerTitle: true,
         elevation: 0,
         backgroundColor: AppColors.transparent,
@@ -59,12 +59,12 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: (index){
         currentTabIndex = index;
         if(currentTabIndex == 0){
-          currentTab = QuranTab();
+          body = QuranTab();
         }else if(currentTabIndex == 1) {
-          currentTab = AhadethTab();
+          body = AhadethTab();
         }else if(currentTabIndex == 2){
-          currentTab = SebhaTab();
-        }else {currentTab=RadioTab();}
+          body = SebhaTab();
+        }else {body=RadioTab();}
         setState(() {});
       },
     ),
