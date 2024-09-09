@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:islami/screens/sura_details/sura_details.dart';
 import 'package:islami/utilits/app_assets.dart';
 import 'package:islami/utilits/app_colors.dart';
@@ -7,9 +8,14 @@ import 'package:islami/utilits/app_theme.dart';
 import '../../model/screen_details_args.dart';
 import '../../utilits/constants.dart';
 
-class QuranTab extends StatelessWidget {
+class QuranTab extends StatefulWidget {
   QuranTab({super.key});
 
+  @override
+  State<QuranTab> createState() => _QuranTabState();
+}
+
+class _QuranTabState extends State<QuranTab> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -39,19 +45,19 @@ class QuranTab extends StatelessWidget {
           height: 3,
           color: AppColors.primary,
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
             children: [
               Expanded(
                   child: Text(
-                "Verses",
+                AppLocalizations.of(context)!.verses,
                 style: AppTheme.mediaTitleTextStyle,
                 textAlign: TextAlign.center,
               )),
               Expanded(
                   child: Text(
-                "Sura Name",
+                AppLocalizations.of(context)!.suraName,
                 style: AppTheme.mediaTitleTextStyle,
                 textAlign: TextAlign.center,
               )),

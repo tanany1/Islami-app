@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:islami/providers/settings_provider.dart';
 import 'package:islami/tabs/ahadeth/ahadeth.dart';
 import 'package:islami/tabs/quran/quran_tab.dart';
 import 'package:islami/tabs/radio/radio_tab.dart';
 import 'package:islami/tabs/sebha/sebha_tab.dart';
+import 'package:islami/tabs/settings/settings_tab.dart';
 import 'package:islami/utilits/app_assets.dart';
 import 'package:islami/utilits/app_colors.dart';
-
-import '../../utilits/app_theme.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   static const String route = "Home";
 
@@ -20,16 +22,32 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentTabIndex = 0;
 
+  void setCurrentTabIndex(int currentIndex) {
+    currentTabIndex = currentIndex;
+  }
+
+  List<Widget> tabs = [
+    QuranTab(),
+    const AhadethTab(),
+    const SebhaTab(),
+    const RadioTab(),
+    const SettingsTab()
+  ];
+
   Widget body = QuranTab();
 
   @override
   Widget build(BuildContext context) {
+    SettingsProvider settingsProvider = Provider.of(context);
     return Container(
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
-          AppAssets.background,
-        ))),
+                  settingsProvider.isDarkMode()
+                      ? AppAssets.darkBackground
+                      : AppAssets.background,
+                ),
+                fit: BoxFit.fill)),
         child: Scaffold(
           backgroundColor: AppColors.transparent,
           appBar: buildAppBar(),
@@ -40,24 +58,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppBar buildAppBar() => AppBar(
         title: Text(
-          "Islami",
-          style: AppTheme.mediaTitleTextStyle,
+          AppLocalizations.of(context)!.islami,
         ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: AppColors.transparent,
       );
 
   Widget buildBottomNavigation() => Theme(
-        data: ThemeData(canvasColor: AppColors.primary),
+        data: Theme.of(context)
+            .copyWith(canvasColor: Theme.of(context).primaryColor),
         child: BottomNavigationBar(
           items: [
             buildBottomNavigationBarItem(AppAssets.icQuran, "Quran"),
             buildBottomNavigationBarItem(AppAssets.icAhadeth, "Ahadeth"),
             buildBottomNavigationBarItem(AppAssets.icSebha, "Sebha"),
             buildBottomNavigationBarItem(AppAssets.icRadio, "Radio"),
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.settings),
+                label: AppLocalizations.of(context)!.settings),
           ],
-          selectedItemColor: AppColors.lightBlack,
           showSelectedLabels: true,
           showUnselectedLabels: true,
           unselectedItemColor: Colors.white,
@@ -67,11 +84,13 @@ class _HomeScreenState extends State<HomeScreen> {
             if (currentTabIndex == 0) {
               body = QuranTab();
             } else if (currentTabIndex == 1) {
-              body = AhadethTab();
+              body = const AhadethTab();
             } else if (currentTabIndex == 2) {
-              body = SebhaTab();
+              body = const SebhaTab();
+            } else if (currentTabIndex == 3) {
+              body = const RadioTab();
             } else {
-              body = RadioTab();
+              body = const SettingsTab();
             }
             setState(() {});
           },
